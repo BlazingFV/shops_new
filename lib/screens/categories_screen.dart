@@ -40,9 +40,76 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     String catie = widget.category;
 
-    var product = Provider.of<Products>(context,listen: false).getCategoriesProduct(catie);
-    
-  
+    // var product = Provider.of<Products>(context,listen: false).getCategoriesProduct(catie);
+    final productData = Provider.of<Products>(context);
+    List<Product> products = productData.getCategoriesProduct(catie);
+    List<Widget> widgt = products.map((produc) {
+      return  InkWell(
+      child: ListView(
+        shrinkWrap: true,
+        primary: false,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          Stack(children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height / 3.6,
+              width: MediaQuery.of(context).size.width / 2.2,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  "${produc.image}",
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            //   Positioned(
+            //     right: -10.0,
+            //     bottom: 3.0,
+            //     child: RawMaterialButton(
+            //       onPressed: (){},
+            //       fillColor: Colors.white,
+            //       shape: CircleBorder(),
+            //       elevation: 4.0,
+            //       child: Padding(
+            //         padding: EdgeInsets.all(5),
+            //         child: Icon(
+            //           isFav
+            //               ?Icons.favorite
+            //               :Icons.favorite_border,
+            //           color: Colors.red,
+            //           size: 17,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ],
+          ]),
+          Padding(
+            padding: EdgeInsets.only(bottom: 2.0, top: 8.0),
+            child: Text(
+              "${produc.title}",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w900,
+              ),
+              maxLines: 2,
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (BuildContext context){
+        //       return ProductDetails();
+        //     },
+        //   ),
+        // );
+      },
+    );
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -97,9 +164,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             SizedBox(height: 10.0),
 
             ListView(
-              children: [
-                ProductsGrid(false),
-              ],
+              children: widgt,
+
               shrinkWrap: true,
               primary: false,
               physics: NeverScrollableScrollPhysics(),

@@ -13,8 +13,7 @@ class GridProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   final productData = Provider.of<Products>(context).getCategoriesProduct(category);
-
+   
     return InkWell(
       child: ListView(
         shrinkWrap: true,
@@ -28,7 +27,7 @@ class GridProduct extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
-                  "${productData}",
+                  "",
                   fit: BoxFit.cover,
                 ),
               ),
