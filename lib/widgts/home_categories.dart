@@ -26,7 +26,7 @@ class _HomeCategoryState extends State<HomeCategory> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context){
-              return CategoriesScreen();
+              return CategoriesScreen(category: widget.title,);
             },
           ),
         );

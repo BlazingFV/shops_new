@@ -10,36 +10,39 @@ import 'package:shops/widgts/home_categories.dart';
 import '../data/data.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  final String category;
+
+  CategoriesScreen({this.category});
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  var _isInit = true;
-  var _isLoading = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Products>(context).fetchandSetCategories();
-      setState(() {
-        _isLoading = false;
-      });
-    }
-    _isInit = false;
-  }
-
-  String catie = "Sweets";
-  Future<void> _refresh(BuildContext ctx) async {
-    Provider.of<Products>(ctx).fetchandSetCategories();
-  }
+  // var _isInit = true;
+  // var _isLoading = false;
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_isInit) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     Provider.of<Products>(context).fetchandSetCategories();
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  //   _isInit = false;
+  // }
 
   var showFavourite = false;
   @override
   Widget build(BuildContext context) {
+    String catie = widget.category;
+
+    var product = Provider.of<Products>(context,listen: false).getCategoriesProduct(catie);
+    
+  
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -51,7 +54,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         centerTitle: true,
         title: Text(
-          "${catie}",
+          "$catie",
         ),
         elevation: 0.0,
       ),
@@ -59,28 +62,27 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
         child: ListView(
           children: <Widget>[
-            SizedBox(height: 10.0),
-            Container(
-              height: 65.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: categories == null ? 0 : categories.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Map cat = categories[index];
-                  return HomeCategory(
-                    title: cat['name'],
-                    items: cat['items'].toString(),
-                    isHome: false,
-                    tap: () {
-                      setState(() {
-                        catie = "${cat['name']}";
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
+            // Container(
+            //   height: 65.0,
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //     shrinkWrap: true,
+            //     itemCount: categories == null ? 0 : categories.length,
+            //     itemBuilder: (BuildContext context, int index) {
+            //       Map cat = categories[index];
+            //       return HomeCategory(
+            //         title: cat['name'],
+            //         items: cat['items'].toString(),
+            //         isHome: false,
+            //         tap: () {
+            //           setState(() {
+            //             catie = "${cat['name']}";
+            //           });
+            //         },
+            //       );
+            //     },
+            //   ),
+            // ),
 
             SizedBox(height: 20.0),
 
@@ -94,26 +96,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             Divider(),
             SizedBox(height: 10.0),
 
-            GridView(
+            ListView(
               children: [
-                FutureBuilder(
-                    future: _refresh(context),
-                    builder: (context, AsyncSnapshot<dynamic> snapshot) {
-                      return RefreshIndicator(
-                          child: ProductsGrid(
-                           false
-                          ),
-                          onRefresh: () => _refresh(context));
-                    })
+                ProductsGrid(false),
               ],
               shrinkWrap: true,
               primary: false,
               physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.25),
-              ),
+              // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //   crossAxisCount: 2,
+              //   childAspectRatio: MediaQuery.of(context).size.width /
+              //       (MediaQuery.of(context).size.height / 1.25),
+              // ),
             ),
           ],
         ),

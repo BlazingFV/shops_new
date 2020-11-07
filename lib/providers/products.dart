@@ -216,4 +216,16 @@ class Products with ChangeNotifier {
     }
   }
 
+  getCategoriesProduct(category){
+    List<Product> myProduct = iteams.where((element) {
+      if(element.category==category){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }).toList();
+    return myProduct;
+  }
+
 }
