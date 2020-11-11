@@ -227,5 +227,16 @@ class Products with ChangeNotifier {
     }).toList();
     return myProduct;
   }
+  searchForProducts(query){
+    List<Product> myResult = iteams.where((element){
+      if(element.title==query){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }).toList();
+    return myResult;
+  }
 
 }

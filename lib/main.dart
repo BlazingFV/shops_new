@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shops/data/data.dart';
@@ -23,9 +24,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'models/meal.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -90,8 +93,10 @@ class MyApp extends StatelessWidget {
               user_productscreen.routedname: (ctx) => user_productscreen(),
               Edit_ProductScreen.routedname: (ctx) => Edit_ProductScreen(),
               image_screen.routedname: (ctx) => image_screen(),
-              CategoriesInScreen.routeName : (ctx) => CategoriesInScreen(available: _availableMeals,)
-             
+              CategoriesInScreen.routeName: (ctx) => CategoriesInScreen(
+                    available: _availableMeals,
+                  )
+
               // CategoriesScreen.routename: (ctx) => CategoriesScreen(),
             },
           ),

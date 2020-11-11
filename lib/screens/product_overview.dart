@@ -86,7 +86,7 @@ class _product_overviewState extends State<product_overview> {
           ),
         ],
       ),
-      drawer: app_drawer(),
+      drawer: AppDrawer(),
       body: Padding(
          padding: const EdgeInsets.fromLTRB(10.0,0,10.0,0),
         child: ListView(children: [
