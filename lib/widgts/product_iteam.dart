@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shops/screens/auth_screen.dart';
 import '../screens/product_detail.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
@@ -31,8 +32,9 @@ class product_iteam extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: GridTile(
-          child: Hero(tag: product.id,
-                      child: FadeInImage(
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
               placeholder: AssetImage('assets/images/1.png'),
               image: NetworkImage(
                 product.image,
@@ -52,19 +54,39 @@ class product_iteam extends StatelessWidget {
                 onPressed: () async {
                   try {
                     await product.toggleFavourite(auth.token, auth.userId);
-                    scaffold.showSnackBar(
-                      (SnackBar(
-                        content: Text('Done'),
-                        duration: Duration(seconds: 2),
-                      )),
-                    );
+                    if (auth.token != null && auth.userId != null) {
+                      scaffold.showSnackBar(
+                        (SnackBar(
+                          content: Text('Done'),
+                          duration: Duration(seconds: 2),
+                        )),
+                      );
+                    }
                   } catch (_) {
                     scaffold.showSnackBar(SnackBar(
                       content: Text(
-                        'افحص نتك يا فقير',
-                        textAlign: TextAlign.center,
+                        'Please Login',
+                        textAlign: TextAlign.left,
                       ),
                       duration: Duration(seconds: 2),
+                    ));
+                  }
+                  if (auth.token == null && auth.userId == null) {
+                    scaffold.showSnackBar(SnackBar(
+                      content: Text(
+                        'Please Login or Register',
+                        textAlign: TextAlign.left,
+                      ),
+                      duration: Duration(seconds: 2),
+                      action: SnackBarAction(
+                        label: 'Register or Login',
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => AuthScreen(),
+                          ),
+                        ),
+                      ),
                     ));
                   }
                 },
@@ -74,20 +96,39 @@ class product_iteam extends StatelessWidget {
               color: Theme.of(context).accentColor,
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-                cart.addIteam(product.id, product.title, product.price);
-                Scaffold.of(context).hideCurrentSnackBar();
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Added Item to Cart!'),
+                if (auth.token != null && auth.userId != null) {
+                  cart.addIteam(product.id, product.title, product.price);
+                  Scaffold.of(context).hideCurrentSnackBar();
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Added Item to Cart!'),
+                      duration: Duration(seconds: 2),
+                      action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          cart.removeSingleItem(product.id);
+                        },
+                      ),
+                    ),
+                  );
+                } else if (auth.token == null && auth.userId == null) {
+                  scaffold.showSnackBar(SnackBar(
+                    content: Text(
+                      'Please Login or Register',
+                      textAlign: TextAlign.left,
+                    ),
                     duration: Duration(seconds: 2),
                     action: SnackBarAction(
-                      label: 'UNDO',
-                      onPressed: () {
-                        cart.removeSingleItem(product.id);
-                      },
+                      label: 'Register or Login',
+                      onPressed: () => Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => AuthScreen(),
+                        ),
+                      ),
                     ),
-                  ),
-                );
+                  ));
+                }
               },
             ),
           ),

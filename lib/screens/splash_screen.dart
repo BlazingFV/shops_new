@@ -5,7 +5,18 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Loading...'),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/logo.jpeg'),
+                ),
+              ),
+            ),
+            Text('Loading ...')
+          ],
+        ),
       ),
     );
   }

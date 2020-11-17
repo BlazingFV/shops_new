@@ -41,7 +41,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     String catie = widget.category;
 
     // var product = Provider.of<Products>(context,listen: false).getCategoriesProduct(catie);
-    final productData = Provider.of<Products>(context);
+    final productData = Provider.of<Products>(context,listen: false);
     List<Product> products = productData.getCategoriesProduct(catie);
     List<Widget> widgt = products.map((produc) {
       return  InkWell(

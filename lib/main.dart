@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shops/data/data.dart';
 import 'package:shops/screens/categories_in_screens.dart';
 import 'package:shops/screens/categories_screen.dart';
+import 'package:shops/screens/home_screen.dart';
 import 'package:shops/screens/user_productscreen.dart';
 import './screens/product_overview.dart';
 import './screens/product_detail.dart';
@@ -72,13 +73,13 @@ class MyApp extends StatelessWidget {
             ),
             home: auth.isAuth
                 ? product_overview()
-                // ? CategoriesScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (cotext, snapshot) =>
                         snapshot.connectionState == ConnectionState.waiting
                             ? SplashScreen()
-                            : AuthScreen(),
+                            : HomeScreen(),
+                    // : product_overview(),
                   ),
             //        StreamBuilder(stream: FirebaseAuth.instance.onAuthStateChanged,builder: (ctx,userSnapShot){
             //   if(userSnapShot.hasData){

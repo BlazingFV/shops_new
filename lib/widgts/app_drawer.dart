@@ -67,7 +67,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.search),
-            title: Text('Profile'),
+            title: Text('search'),
             onTap: () {
               Navigator.push(
                   context, CupertinoPageRoute(builder: (context) => Search()));

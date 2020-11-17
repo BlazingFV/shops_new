@@ -10,8 +10,8 @@ import '../models/dp_model.dart';
 class Products with ChangeNotifier {
   // DBHelper mydatebase=DBHelper();
 
-  final String idToken;
-  final String userId;
+  dynamic idToken;
+  dynamic userId;
   Products(this.idToken, this._iteams, this.userId);
   List<Product> _iteams = [
     // Product(
@@ -64,15 +64,17 @@ class Products with ChangeNotifier {
   Product findById(String id) {
     return _iteams.firstWhere((prod) => prod.id == id);
   }
-  Product findByCategory(String category){
+
+  Product findByCategory(String category) {
     return _iteams.firstWhere((prod) => prod.category == category);
   }
 
   Future<void> fetchandSetProducts([bool filterByuser = false]) async {
+   
     final filterString =
         filterByuser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
-        'https://shops-fb193.firebaseio.com/products.json?auth=$idToken&$filterString ';
+        'https://shops-fb193.firebaseio.com/products.json? ';
     try {
       final response = await http.get(url);
       final extraData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -102,7 +104,7 @@ class Products with ChangeNotifier {
       notifyListeners();
       print(json.decode(response.body));
     } catch (error) {
-      throw error;
+      print(error);
     }
   }
 
@@ -131,7 +133,7 @@ class Products with ChangeNotifier {
         image: product.image,
         price: product.price,
         title: product.title,
-        category:  product.category,
+        category: product.category,
       );
       _iteams.add(_newProduct);
 
@@ -179,8 +181,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchandSetCategories() async {
-    final filterString =
-      'orderBy="category"&equalTo="Sweets"';
+    final filterString = 'orderBy="category"&equalTo="Sweets"';
     var url =
         'https://shops-fb193.firebaseio.com/products.json?auth=$idToken&$filterString ';
     try {
@@ -216,27 +217,25 @@ class Products with ChangeNotifier {
     }
   }
 
-  getCategoriesProduct(category){
+  getCategoriesProduct(category) {
     List<Product> myProduct = iteams.where((element) {
-      if(element.category==category){
+      if (element.category == category) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }).toList();
     return myProduct;
   }
-  searchForProducts(query){
-    List<Product> myResult = iteams.where((element){
-      if(element.title==query){
+
+  searchForProducts(String query) {
+    List<Product> myResult = iteams.where((element) {
+      if (element.title.toLowerCase().contains(query)) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }).toList();
     return myResult;
   }
-
 }

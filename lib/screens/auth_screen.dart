@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shops/models/users.dart';
 
 import '../models/http_exceptions.dart';
 import '../providers/auth.dart';
@@ -64,9 +66,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         ],
                       ),
                       child: Text(
-                        'MyShop',
+                        'Halla',
                         style: TextStyle(
-                          color: Theme.of(context).accentTextTheme.headline6.color,
+                          color:
+                              Theme.of(context).accentTextTheme.headline6.color,
                           fontSize: 50,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
@@ -98,8 +101,10 @@ class _AuthCardState extends State<AuthCard>
   AnimationController _controller;
   Animation<Offset> _slidAnimation;
   Animation<double> _opacity;
+  Users users = Users();
   @override
   void initState() {
+    getCurrentUser();
     super.initState();
     _controller = AnimationController(
       vsync: this,
@@ -120,7 +125,6 @@ class _AuthCardState extends State<AuthCard>
 
   @override
   void dispose() {
-    
     super.dispose();
     _controller.dispose();
   }
@@ -150,6 +154,19 @@ class _AuthCardState extends State<AuthCard>
   }
 
   var _isLoading = false;
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<User> getCurrentUser() async {
+    User currentUser1;
+    currentUser1 = _auth.currentUser;
+    return currentUser1;
+  }
+
+  _addDataAndGetUser() async {
+    User currentUser = await getCurrentUser();
+    users.addDatatoCloud(currentUser);
+  }
+
   final _passwordController = TextEditingController();
 
   void _submit() async {
@@ -172,6 +189,7 @@ class _AuthCardState extends State<AuthCard>
         // Sign user up
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password']);
+        _addDataAndGetUser();
       }
     } on Http_Exceptions catch (error) {
       var errormessage = 'Authentication Failed';
@@ -191,6 +209,7 @@ class _AuthCardState extends State<AuthCard>
       var errormessage = 'couldnot authnticate';
       _showErrorDialog(errormessage);
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -297,7 +316,10 @@ class _AuthCardState extends State<AuthCard>
                   RaisedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
+                    onPressed: () async{
+                      _submit();
+                    await  _addDataAndGetUser();
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
